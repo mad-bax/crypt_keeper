@@ -1,6 +1,7 @@
 import argparse
 import secrets
 import toml
+import tarfile
 
 import os
 
@@ -15,8 +16,8 @@ def main():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-e", "--encrypt", type=str, help="The file to encrypt, given as a local file path.")
-    parser.add_argument("-d", "--decrypt", type=str, help="The file to decrypt, given as a local file path.")
+    parser.add_argument("-e", "--encrypt", type=str, help="The file to encrypt, given as a local path.")
+    parser.add_argument("-d", "--decrypt", type=str, help="The file to decrypt, given as a local path.")
     parser.add_argument("-c", "--clean-file-keys", action="store_true", help="Remove all file keys.")
     parser.add_argument("-r", "--remove-file-key", type=str, help="Remove the specified file key.")
     parser.add_argument("-l", "--list-file-keys", action="store_true", help="List all of the current file keys.")
