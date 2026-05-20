@@ -15,10 +15,6 @@ HOME_DIR=os.path.expanduser("~")
 CRYPT_DIR=f"{HOME_DIR}/.crypt"
 CRYPT_FILE=f"{CRYPT_DIR}/keeper.toml"
 
-def create_tar(path):
-
-    return path
-
 def enc_file(path):
 
     file_size = os.path.getsize(path)
@@ -133,7 +129,7 @@ def main():
                 temp_file.write(toml.dumps(crypt))
         else:
             with open(CRYPT_FILE, "r") as temp_file:
-                toml.loads(temp_file.read())
+                crypt = toml.loads(temp_file.read())
     except:
         print(f"Cannot open {CRYPT_FILE}")
         exit(1)
@@ -144,14 +140,24 @@ def main():
         for key in crypt.keys():
             print(f" -> {key}")
     elif args.clean_file_keys:
-        pass
+        with open(CRYPT_FILE, "w") as temp_file:
+            temp_file.write(toml.dumps({}))
+        for f in os.listdir(CRYPT_DIR):
+            if not f.endswith("keeper.toml"):
+                os.remove(CRYPT_DIR+"/"+f)
     elif args.remove_file_key is not None:
-        pass
+        if args.remove_file_key in crypt.keys():
+            del crypt[args.remove_file_key]
+            with open(CRYPT_FILE, "w") as temp_file:
+                temp_file.write(toml.dumps(crypt))
+            if os.path.exists(args.remove_file_key+".kk"):
+                os.remove(args.remove_file_key+".kk")
     elif args.encrypt is not None:
         if os.path.isfile(args.encrypt):
             enc_file(args.encrypt)
         elif os.path.isdir(args.encrypt):
-            enc_file(create_tar(args.encrypt))
+            print("You have directed to a directory, please compress the directory into a file before encrypting.")
+            exit(0)
     elif args.decrypt is not None:
         dec_file(args.decrypt)
     else:
