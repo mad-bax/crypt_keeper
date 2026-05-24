@@ -50,7 +50,7 @@ def enc_file(path):
 
     t = tqdm(total=file_size)
 
-    with open(path, "rb", encoding="utf-8") as in_file:
+    with open(path, "rb") as in_file:
         for c in in_file.read():
             out_bytes.append(c^secret[index])
             t.update(1)
@@ -61,12 +61,12 @@ def enc_file(path):
 
     orig_data_hash = h.hexdigest()
 
-    with open(path+DEFAULT_OUT_EXT, "wb", encoding="utf-8") as out_file:
+    with open(path+DEFAULT_OUT_EXT, "wb") as out_file:
         out_file.write(out_bytes)
 
     key_file = CRYPT_DIR+"/"+os.path.basename(path)+DEFAULT_OUT_KEY
 
-    with open(key_file, "wb", encoding="utf-8") as key_handler:
+    with open(key_file, "wb") as key_handler:
         key_handler.write(secret)
 
     with open(CRYPT_FILE, "r", encoding="utf-8") as record_file:
@@ -108,12 +108,12 @@ def dec_file(path):
         print("Key size does not match file size")
         sys.exit(1)
 
-    with open(key_file, "rb", encoding="utf-8") as key_handler:
+    with open(key_file, "rb") as key_handler:
         secret = key_handler.read()
 
     t = tqdm(total=file_size)
 
-    with open(path, "rb", encoding="utf-8") as enc_file_handle:
+    with open(path, "rb") as enc_file_handle:
         for d in enc_file_handle.read():
             out_bytes.append(d ^ secret[index])
             t.update(1)
@@ -129,7 +129,7 @@ def dec_file(path):
         print("Hashes don't match")
         sys.exit(1)
 
-    with open(path[:-3], "wb", encoding="utf-8") as data_out:
+    with open(path[:-3], "wb") as data_out:
         data_out.write(out_bytes)
 
     del records[base_name]
